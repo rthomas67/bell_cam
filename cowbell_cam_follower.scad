@@ -9,7 +9,13 @@ pivotWallThickness=10;
 
 pivotOutsideDia=pivotInsideDia+pivotWallThickness*2;
 
-followerWidth=45;
+camFollowerWidth=45;
+
+// Temp override
+camFollowerWidth=5;
+
+
+
 boltHoleDia=6;
 
 cowbellHangerThickness=16;
@@ -37,33 +43,35 @@ union() {
         hull() {
             // cam follower tip
             translate([-camFollowerTipWidth,pivotOutsideDia/2,0])
-                cube([camFollowerTipWidth,camFollowerTipHeight,followerWidth]);
+                cube([camFollowerTipWidth,camFollowerTipHeight,camFollowerWidth]);
             // pivot
-            cylinder(d=pivotOutsideDia, h=followerWidth);
+            cylinder(d=pivotOutsideDia, h=camFollowerWidth);
             // block to hold the cowbell
             translate([-cowbellHandleBlockThickness/2,-pivotOutsideDia/2-cowbellHangarOpeningHeight,0])
-                cube([cowbellHandleBlockThickness,cowbellHangarOpeningHeight,followerWidth]);
+                cube([cowbellHandleBlockThickness,cowbellHangarOpeningHeight,camFollowerWidth]);
             
         }
         // pivot opening
         translate([0,0,-overlap])
-            cylinder(d=pivotInsideDia, h=followerWidth+overlap*2);
+            cylinder(d=pivotInsideDia, h=camFollowerWidth+overlap*2);
         // slot for hanger to pass through
         translate([-cowbellHangerThickness/2,-pivotOutsideDia/2-cowbellHangarMetalThickness,-overlap])
-            cube([cowbellHangerThickness,cowbellHangarMetalThickness,followerWidth+overlap*2]);
+            cube([cowbellHangerThickness,cowbellHangarMetalThickness,camFollowerWidth+overlap*2]);
         
-        // bolt hole 1
-        translate([0,
-                -pivotOutsideDia/2-cowbellHangarOpeningHeight/2,
-                followerWidth*3/4])
-            rotate([0,90,0])
-                cylinder(d=boltHoleDia, h=pivotOutsideDia+overlap*2, center=true);
-        // bolt hole 2
-        translate([0,
-                -pivotOutsideDia/2-cowbellHangarOpeningHeight/2,
-                followerWidth/4])
-            rotate([0,90,0])
-                cylinder(d=boltHoleDia, h=pivotOutsideDia+overlap*2, center=true);
+        if (camFollowerWidth > boltHoleDia*4) {
+            // bolt hole 1
+            translate([0,
+                    -pivotOutsideDia/2-cowbellHangarOpeningHeight/2,
+                    camFollowerWidth*3/4])
+                rotate([0,90,0])
+                    cylinder(d=boltHoleDia, h=pivotOutsideDia+overlap*2, center=true);
+            // bolt hole 2
+            translate([0,
+                    -pivotOutsideDia/2-cowbellHangarOpeningHeight/2,
+                    camFollowerWidth/4])
+                rotate([0,90,0])
+                    cylinder(d=boltHoleDia, h=pivotOutsideDia+overlap*2, center=true);
+        }
         
     }
     translate([0,-pivotOutsideDia/2-cowbellHangarOpeningHeight-cowbellTopOverHangDepth,0])
@@ -73,19 +81,19 @@ union() {
 module bellTopBraceBlock() {
     difference() {
         translate([-cowbellHandleBlockThickness/2,0,0])
-            cube([cowbellHandleBlockThickness,cowbellTopOverHangDepth,followerWidth]);
+            cube([cowbellHandleBlockThickness,cowbellTopOverHangDepth,camFollowerWidth]);
         translate([0,-overlap,-overlap])
         hull() {
             // front (right) side of bell
             translate([cowbellTopFlatThickness/2,cowbellTopOverHangDepth-cowbellTopCornerRadius,0])
-                cylinder(r=cowbellTopCornerRadius, h=followerWidth+overlap*2);
+                cylinder(r=cowbellTopCornerRadius, h=camFollowerWidth+overlap*2);
             // back (left) side of bell
             translate([-cowbellTopFlatThickness/2,cowbellTopOverHangDepth-cowbellTopCornerRadius,0])
-                cylinder(r=cowbellTopCornerRadius, h=followerWidth+overlap*2);
+                cylinder(r=cowbellTopCornerRadius, h=camFollowerWidth+overlap*2);
             translate([-cowbellTopFlatThickness/2-cowbellTopCornerRadius,0,0])
                 cube([cowbellTopFlatThickness+cowbellTopCornerRadius*2,
                     cowbellTopOverHangDepth-cowbellTopCornerRadius,
-                    followerWidth+overlap*2]);
+                    camFollowerWidth+overlap*2]);
         }
     }
 }
