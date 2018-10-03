@@ -2,6 +2,8 @@
 allParts=false;
 topPart=true;
 
+partTolerance=0.5;  // how much to shave off the bottom part for a better fit
+
 //import("cowbell_cam_follower_bottom_part_v1.stl");
 //import("cowbell_cam_follower_top_part_v1.stl");
 
@@ -39,6 +41,7 @@ cowbellHandleBlockThickness=cowbellHangerThickness+2*cowbellHandleBlockOverHangT
 // Used to create a block that supports/braces the top of the bell a bit
 cowbellTopOverHangDepth=14;
 cowbellTopFlatThickness=22;
+cowbellTopArchDifferential=1;  // How far down the corners are from the center
 cowbellTopCornerRadius=5;
 cowbellTopThickness=cowbellTopFlatThickness+cowbellTopCornerRadius*2;
 
@@ -59,7 +62,8 @@ if (allParts) {
 } else {
     intersection() {
         wholeCamFollower();
-        bottomPartBlock();
+        translate([partTolerance,partTolerance,0])
+            bottomPartBlock();
     }
 }
 
@@ -151,11 +155,18 @@ module bellTopBraceBlock() {
             cube([cowbellHandleBlockThickness,cowbellTopOverHangDepth,camFollowerWidth]);
         translate([0,-overlap,-overlap])
         hull() {
+            // top center of bell
+            translate([0,cowbellTopOverHangDepth-cowbellTopCornerRadius,0])
+                cylinder(r=cowbellTopCornerRadius, h=camFollowerWidth+overlap*2);
             // front (right) side of bell
-            translate([cowbellTopFlatThickness/2,cowbellTopOverHangDepth-cowbellTopCornerRadius,0])
+            translate([cowbellTopFlatThickness/2,
+                    cowbellTopOverHangDepth-cowbellTopCornerRadius-cowbellTopArchDifferential,
+                    0])
                 cylinder(r=cowbellTopCornerRadius, h=camFollowerWidth+overlap*2);
             // back (left) side of bell
-            translate([-cowbellTopFlatThickness/2,cowbellTopOverHangDepth-cowbellTopCornerRadius,0])
+            translate([-cowbellTopFlatThickness/2,
+                    cowbellTopOverHangDepth-cowbellTopCornerRadius-cowbellTopArchDifferential,
+                    0])
                 cylinder(r=cowbellTopCornerRadius, h=camFollowerWidth+overlap*2);
                 translate([0,0,camFollowerWidth/2])
                     rotate([-90,0,0])
