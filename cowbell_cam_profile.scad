@@ -15,7 +15,7 @@ camCutDia=80;
 camOuterDia=axleDia+camCoreThickness*2+camLobeHeight*2;
 
 
-numberOfLobes=3;
+numberOfLobes=4;
 
 
 $fn=50;
@@ -35,6 +35,6 @@ difference() {
 }
 
 module camCut() {
-    cylinder(d=camCutDia, h=camFollowerWidth+overlap*2);
+    cylinder(d=camCutDia, h=camFollowerWidth+overlap*2,$fn=6);
 }
 
